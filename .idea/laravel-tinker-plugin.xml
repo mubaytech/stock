@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="laravelTinkerProject">
+    <option name="lastCode" value="&lt;?php&#10;//dd(new DateTimeImmutable());&#10;//Tinker away!&#10;(new \App\Models\Tenant([&#10;        'slug' =&gt; 'stock_test_1',&#10;        'display' =&gt; 'test',&#10;        'descri' =&gt; 'test',&#10;        'tel1' =&gt; '774659453',&#10;        'tel2' =&gt; '774659453',&#10;        'adresse' =&gt; 'hlm',&#10;        'mail' =&gt; 'a@gmail.com'&#10;    ]))-&gt;save();&#10;//\Tenancy\Facades\Tenancy::setTenant(App\Models\Tenant::first());&#10;//config('filesystems');&#10;//Storage::path('test');&#10;//Storage::disk('public')-&gt;url('').'\n'.url('');&#10;//put(\Tenancy\Facades\Tenancy::getTenant()-&gt;getTenantKey*/().'/f.txt','mrs');&#10;//\App\Models\Tenant::all()-&gt;each(function (\App\Models\Tenant $el){&#10;//    $el-&gt;delete();&#10;//});&#10;//\Tenancy\Facades\Tenancy::setTenant(App\Models\Tenant::all()-&gt;first());&#10;//config('database.connections');&#10;//dd(\App\Models\Tenant\User::all());&#10;//dd(\App\Models\Tenant::all());&#10;//dd((new \Laravel\Passport\Client())-&gt;getConnectionName());" />
+  </component>
+</project>

@@ -1,0 +1,55 @@
+type Facture implements  HasNode & HasCreatedAt & HasUpdatedAt & HasDeletedAt{
+    id:ID!
+    deleted_at:DateTimeTz
+    updated_at:DateTimeTz!
+    created_at:DateTimeTz!
+    montant:Float!
+    date:DateTimeTz!
+    transaction:Transaction! @belongsTo
+}
+input CreateFactureInput{
+    montant:Float!
+    date:DateTimeTz!
+    transaction:CreateTransactionBelongsTo!
+}
+input UpdateFactureInput{
+    id:ID!
+    montant:Float
+    date:DateTimeTz
+    transaction:CreateTransactionBelongsTo
+}
+input UpsertFactureInput{
+    id:ID
+    montant:Float
+    date:DateTimeTz
+    transaction:CreateTransactionBelongsTo
+}
+input CreateFactureBelongsTo{
+    connect: ID
+    create: CreateFactureInput
+    update: UpdateFactureInput
+    upsert: UpsertFactureInput
+}
+input UpdateFactureBelongsTo{
+    connect: ID
+    create: CreateFactureInput
+    update: UpdateFactureInput
+    upsert: UpsertFactureInput
+    disconnect: Boolean
+    delete: Boolean
+}
+input UpdateFactureHasMany {
+    create: [CreateFactureInput!]
+    update: [UpdateFactureInput!]
+    upsert: [UpsertFactureInput!]
+    delete: [ID!]
+}
+extend type Query {
+    Factures:[Facture!]! @paginate
+    Facture:Facture @find
+}
+extend type Mutation {
+    createFacture(input:CreateFactureInput @spread):Facture! @create
+    updateFacture(input:UpdateFactureInput @spread):Facture! @update
+    upsertFacture(input:UpsertFactureInput @spread):Facture! @upsert
+}

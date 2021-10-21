@@ -1,0 +1,80 @@
+type User implements HasNode & HasCreatedAt & HasUpdatedAt & HasDeletedAt{
+    id: ID!
+    username: String!
+    created_at: DateTimeTz!
+    updated_at: DateTimeTz!
+    deleted_at:DateTimeTz
+    depot:Depot @belongsTo
+    identite:Personne! @belongsTo
+    permissions:[Permission!] @belongsTo
+    roles:[Role!]! @hasMany
+}
+
+input CreateUserInput{
+    username: String!
+    password:String!  @hash
+    depot:CreateDepotBelongsTo!
+    identite:CreatePersonneBelongsTo!
+    permissions:CreatePermissionBelongsToMany!
+    roles:CreateRoleBelongsToMany!
+    settings:ConnectSettingBelongsToMany
+}
+input UpdateUserInput{
+    id:ID!
+    username: String
+    password:String!  @hash
+    depot:UpdateDepotBelongsTo
+    identite:UpdatePersonneBelongsTo
+    permissions:UpdatePermissionBelongsToMany
+    roles:UpdateRoleBelongsToMany
+    settings:ConnectSettingBelongsToMany
+}
+input UpsertUserInput{
+    id:ID
+    username: String
+    password:String!  @hash
+    depot:UpdateDepotBelongsTo
+    identite:UpdatePersonneBelongsTo
+    permissions:UpdatePermissionBelongsToMany
+    roles:UpdateRoleBelongsToMany
+    settings:ConnectSettingBelongsToMany
+}
+input CreateUserBelongsTo{
+    connect: ID
+    create: CreateUserInput
+    update: UpdateUserInput
+    upsert: UpsertUserInput
+}
+input UpdateUserBelongsTo{
+    connect: ID
+    create: CreateUserInput
+    update: UpdateUserInput
+    upsert: UpsertUserInput
+    disconnect: Boolean
+    delete: Boolean
+}
+input CreateUserBelongsToMany{
+    create: [CreateUserInput!]
+    upsert: [UpsertUserInput!]
+    connect: [ID!]
+    sync: [ID!]
+}
+input UpdateUserBelongsToMany{
+    create: [CreateUserInput!]
+    connect: [ID!]
+    update: [UpdateUserInput!]
+    upsert: [UpsertUserInput!]
+    sync: [ID!]
+    syncWithoutDetaching: [ID!]
+    delete: [ID!]
+    disconnect: [ID!]
+}
+extend type Query {
+    users:[User!]! @paginate
+    user:User @find
+}
+extend type Mutation {
+    createUser(input:CreateUserInput @spread):User! @create
+    updateUser(input:UpdateUserInput @spread):User! @update
+    upsertUser(input:UpsertUserInput @spread):User! @upsert
+}

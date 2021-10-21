@@ -1,0 +1,71 @@
+enum TypeClient {
+    Client @enum(value: 0)
+    FOURNISSEUR @enum(value: 1)
+}
+type Client implements HasNode & HasNom & HasImage & HasEmail & HasAdresse1 & HasContact1 & HasContact2 & HasCreatedAt & HasUpdatedAt{
+    id:ID!
+    nom:String!
+    email:String!
+    adresse_1:String!
+    contact_1:String!
+    contact_2:String!
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+    image:FileModel! @belongsTo
+    commandes:[Commande!]! @hasMany
+}
+input CreateClientInput{
+    nom:String!
+    email:String!
+    adresse_1:String!
+    contact_1:String!
+    contact_2:String!
+    image:CreateFileModelBelongsTo!
+
+    commandes:UpdateCommandeHasMany!
+}
+input UpdateClientInput{
+    id:ID!
+    nom:String
+    email:String
+    adresse_1:String
+    contact_1:String
+    contact_2:String
+    image:UpdateFileModelBelongsTo
+
+    commandes:UpdateCommandeHasMany
+}
+input UpsertClientInput{
+    id:ID
+    nom:String
+    email:String
+    adresse_1:String
+    contact_1:String
+    contact_2:String
+    image:UpdateFileModelBelongsTo
+
+    commandes:UpdateCommandeHasMany
+}
+input CreateClientBelongsTo{
+    connect: ID
+    create: CreateClientInput
+    update: UpdateClientInput
+    upsert: UpsertClientInput
+}
+input UpdateClientBelongsTo{
+    connect: ID
+    create: CreateClientInput
+    update: UpdateClientInput
+    upsert: UpsertClientInput
+    disconnect: Boolean
+    delete: Boolean
+}
+extend type Query {
+    clients:[Client!]! @paginate
+    client:Client @find
+}
+extend type Mutation {
+    createClient(input:CreateClientInput @spread):Client! @create
+    updateClient(input:UpdateClientInput @spread):Client! @update
+    upsertClient(input:UpsertClientInput @spread):Client! @upsert
+}

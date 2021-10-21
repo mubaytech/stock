@@ -1,0 +1,68 @@
+type Permission implements HasNode & HasNom & HasCreatedAt & HasUpdatedAt & HasSlug & HasDescription{
+    id:ID!
+    nom:String!
+    slug:String!
+    description:String!
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+}
+input CreatePermissionInput{
+    nom:String!
+    slug:String!
+    description:String!
+}
+input UpdatePermissionInput{
+    id:ID!
+    nom:String
+    slug:String
+    description:String
+}
+input UpsertPermissionInput{
+    id:ID
+    nom:String
+    slug:String
+    description:String
+}
+input ConnectPermission{
+    id:ID!
+    date_expiration:DateTimeTz
+}
+input CreatePermissionBelongsTo{
+    connect: ID
+    create: CreatePermissionInput
+    update: UpdatePermissionInput
+    upsert: UpsertPermissionInput
+}
+input UpdatePermissionBelongsTo{
+    connect: ID
+    create: CreatePermissionInput
+    update: UpdatePermissionInput
+    upsert: UpsertPermissionInput
+    disconnect: Boolean
+    delete: Boolean
+}
+input CreatePermissionBelongsToMany{
+    create: [CreatePermissionInput!]
+    upsert: [UpsertPermissionInput!]
+    connect: [ConnectPermission!]
+    sync: [ConnectPermission!]
+}
+input UpdatePermissionBelongsToMany{
+    create: [CreatePermissionInput!]
+    connect: [ID!]
+    update: [UpdatePermissionInput!]
+    upsert: [UpsertPermissionInput!]
+    sync: [ConnectPermission!]
+    syncWithoutDetaching: [ConnectPermission!]
+    delete: [ID!]
+    disconnect: [ID!]
+}
+extend type Query {
+    permissions:[Permission!]! @paginate
+    permission:Permission @find
+}
+extend type Mutation {
+    createPermission(input:CreatePermissionInput @spread):Permission! @create
+    updatePermission(input:UpdatePermissionInput @spread):Permission! @update
+    upsertPermission(input:UpsertPermissionInput @spread):Permission! @upsert
+}

@@ -1,0 +1,44 @@
+type CategorieUnitesDeMesure implements HasNode & HasCreatedAt & HasUpdatedAt{
+    id:ID!
+    cathegorie:Categorie! @belongsTo
+    uniteDeMesure:UnitesDeMesure! @belongsTo
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+}
+input CreateCategorieUnitesDeMesureInput{
+    cathegorie:CreateCategorieBelongsTo!
+    uniteDeMesure:CreateUserBelongsTo!
+}
+input UpdateCategorieUnitesDeMesureInput{
+    id:ID!
+    cathegorie:CreateCategorieBelongsTo
+    uniteDeMesure:CreateUserBelongsTo
+}
+input UpsertCategorieUnitesDeMesureInput{
+    id:ID
+    cathegorie:CreateCategorieBelongsTo
+    uniteDeMesure:CreateUserBelongsTo
+}
+input CreateCategorieUnitesDeMesureBelongsTo{
+    connect: ID
+    create: CreateCategorieUnitesDeMesureInput
+    update: UpdateCategorieUnitesDeMesureInput
+    upsert: UpsertCategorieUnitesDeMesureInput
+}
+input UpdateCategorieUnitesDeMesureBelongsTo{
+    connect: ID
+    create: CreateCategorieUnitesDeMesureInput
+    update: UpdateCategorieUnitesDeMesureInput
+    upsert: UpsertCategorieUnitesDeMesureInput
+    disconnect: Boolean
+    delete: Boolean
+}
+extend type Query {
+    categorieUnitesDeMesures:[CategorieUnitesDeMesure!]! @paginate
+    categorieUnitesDeMesure:CategorieUnitesDeMesure @find
+}
+extend type Mutation {
+    createCategorieUnitesDeMesure(input:CreateCategorieUnitesDeMesureInput @spread):CategorieUnitesDeMesure! @create
+    updateCategorieUnitesDeMesure(input:UpdateCategorieUnitesDeMesureInput @spread):CategorieUnitesDeMesure! @update
+    upsertCategorieUnitesDeMesure(input:UpsertCategorieUnitesDeMesureInput @spread):CategorieUnitesDeMesure! @upsert
+}

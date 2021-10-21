@@ -1,0 +1,13 @@
+type CommandeStock implements HasNode & HasCreatedAt & HasUpdatedAt & HasDeletedAt{
+    id:ID!
+    deleted_at:DateTimeTz
+    updated_at:DateTimeTz!
+    created_at:DateTimeTz!
+    quantite:Float!
+    prix_achat_unitaire:Float!
+    prix_de_vente_unitaire:Float!
+    remise:Float!
+    remise_description:String!
+    taxe:Float!
+    taxe_description:String!
+}

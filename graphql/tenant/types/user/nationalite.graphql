@@ -1,0 +1,44 @@
+type Nationalite implements HasNode & HasNom & HasCreatedAt & HasUpdatedAt & HasSlug{
+    id:ID!
+    nom:String!
+    slug:String!
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+}
+input CreateNationaliteInput{
+    nom:String!
+    slug:String!
+}
+input UpdateNationaliteInput{
+    id:ID!
+    nom:String
+    slug:String
+}
+input UpsertNationaliteInput{
+    id:ID
+    nom:String
+    slug:String
+}
+input CreateNationaliteBelongsTo{
+    connect: ID
+    create: CreateNationaliteInput
+    update: UpdateNationaliteInput
+    upsert: UpsertNationaliteInput
+}
+input UpdateNationaliteBelongsTo{
+    connect: ID
+    create: CreateNationaliteInput
+    update: UpdateNationaliteInput
+    upsert: UpsertNationaliteInput
+    disconnect: Boolean
+    delete: Boolean
+}
+extend type Query {
+    nationalites:[Nationalite!]! @paginate
+    nationalite:Nationalite @find
+}
+extend type Mutation {
+    createNationalite(input:CreateNationaliteInput @spread):Nationalite! @create
+    updateNationalite(input:UpdateNationaliteInput @spread):Nationalite! @update
+    upsertNationalite(input:UpsertNationaliteInput @spread):Nationalite! @upsert
+}

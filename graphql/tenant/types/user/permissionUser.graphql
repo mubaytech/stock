@@ -1,0 +1,6 @@
+type PermissionUser implements HasNode & HasCreatedAt & HasUpdatedAt{
+    id:ID!
+    date_expiration:DateTimeTz!
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+}

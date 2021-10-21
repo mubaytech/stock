@@ -1,0 +1,70 @@
+type FileModel implements HasNode  & HasCreatedAt & HasUpdatedAt{
+    id:ID!
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+    nom:String
+    url:String
+    path:String
+    thumbnail_url:String
+    thumbnail_path:String
+    type:String
+    exist:Boolean!
+    #    user:User @belongsTo
+}
+input CreateFileModelInput{
+    nom:String
+    url:String
+    path:String
+    thumbnail_url:String
+    thumbnail_path:String
+    type:String
+    exist:Boolean!
+    #    user:CreateUserBelongsTo
+}
+input UpdateFileModelInput{
+    id:ID!
+    nom:String
+    url:String
+    path:String
+    thumbnail_url:String
+    thumbnail_path:String
+    type:String
+    exist:Boolean
+    #    user:UpdateUserBelongsTo
+
+}
+input UpsertFileModelInput{
+    id:ID
+    nom:String
+    url:String
+    path:String
+    thumbnail_url:String
+    thumbnail_path:String
+    type:String
+    exist:Boolean
+    #    user:UpdateUserBelongsTo
+}
+input CreateFileModelBelongsTo{
+    connect: ID
+    create: CreateFileModelInput
+    update: UpdateFileModelInput
+    upsert: UpsertFileModelInput
+}
+input UpdateFileModelBelongsTo{
+    connect: ID
+    create: CreateFileModelInput
+    update: UpdateFileModelInput
+    upsert: UpsertFileModelInput
+    disconnect: Boolean
+    delete: Boolean
+}
+extend type Query {
+    files:[FileModel!]! @paginate
+    file:FileModel @find
+}
+extend type Mutation {
+    createFileModel(input:CreateFileModelInput @spread):FileModel! @create
+    updateFileModel(input:UpdateFileModelInput @spread):FileModel! @update
+    upsertFileModel(input:UpsertFileModelInput @spread):FileModel! @upsert
+    uploadFile(file: Upload!,id:ID!): FileModel!
+}

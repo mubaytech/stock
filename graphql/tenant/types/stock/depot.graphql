@@ -1,0 +1,82 @@
+type Depot implements HasNode & HasCreatedAt & HasUpdatedAt & HasImage & HasNom & HasSlug & HasAdresse1 & HasContact1 & HasContact2 & HasEmail{
+    id:ID!
+    nom:String!
+    slug:String!
+    adresse_1:String!
+    contact_1:String!
+    contact_2:String!
+    email:String!
+    web:String!
+    region:String!
+    ville:String!
+    image:FileModel! @belongsTo
+
+    transactions:[Transaction!]! @hasMany
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+}
+input CreateDepotInput{
+    nom:String!
+    slug:String!
+    adresse_1:String!
+    contact_1:String!
+    contact_2:String!
+    email:String!
+    web:String!
+    region:String!
+    ville:String!
+    image:CreateFileModelBelongsTo!
+
+    transactions:UpdateTransactionHasMany!
+}
+input UpdateDepotInput{
+    id:ID!
+    nom:String
+    slug:String
+    adresse_1:String
+    contact_1:String
+    contact_2:String
+    email:String
+    web:String
+    region:String
+    ville:String
+    image:UpdateFileModelBelongsTo
+    transactions:UpdateTransactionHasMany
+}
+input UpsertDepotInput{
+    id:ID
+    nom:String
+    slug:String
+    adresse_1:String
+    contact_1:String
+    contact_2:String
+    email:String
+    web:String
+    region:String
+    ville:String
+    image:UpdateFileModelBelongsTo
+
+    transactions:UpdateTransactionHasMany
+}
+input CreateDepotBelongsTo{
+    connect: ID
+    create: CreateDepotInput
+    update: UpdateDepotInput
+    upsert: UpsertDepotInput
+}
+input UpdateDepotBelongsTo{
+    connect: ID
+    create: CreateDepotInput
+    update: UpdateDepotInput
+    upsert: UpsertDepotInput
+    disconnect: Boolean
+}
+extend type Query {
+    depots:[FileModel!]! @paginate
+    depot:FileModel @find
+}
+extend type Mutation {
+    createDepot(input:CreateDepotInput @spread):Depot! @create
+    updateDepot(input:UpdateDepotInput @spread):Depot! @update
+    DepotUpsert(input:UpsertDepotInput @spread):Depot! @upsert
+}

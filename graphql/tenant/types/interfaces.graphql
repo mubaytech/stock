@@ -1,0 +1,80 @@
+interface HasNode{
+    id:ID!
+}
+interface HasCreatedAt{
+    created_at:DateTimeTz!
+}
+interface HasUpdatedAt{
+    updated_at:DateTimeTz!
+}
+interface HasDeletedAt{
+    deleted_at:DateTimeTz
+}
+interface HasNom{
+    nom:String!
+}
+interface HasEmail{
+    email:String!
+}
+interface HasAdresse1{
+    adresse_1:String!
+}
+interface HasAdresse2{
+    adresse_2:String!
+}
+interface HasContact1{
+    contact_1:String!
+}
+interface HasContact2{
+    contact_2:String!
+}
+interface HasImage{
+    image:FileModel!
+}
+interface HasSlug{
+    slug:String!
+}
+interface HasDescription{
+    description:String!
+}
+# may be
+
+interface MayBeHasNode{
+    id:ID
+}
+interface MayBeHasCreatedAt{
+    created_at:DateTimeTz
+}
+interface MayBeHasUpdatedAt{
+    updated_at:DateTimeTz
+}
+interface MayBeHasDeletedAt{
+    deleted_at:DateTimeTz
+}
+interface MayBeHasNom{
+    nom:String
+}
+interface MayBeHasEmail{
+    email:String
+}
+interface MayBeHasAdresse1{
+    adresse_1:String
+}
+interface MayBeHasAdresse2{
+    adresse_2:String
+}
+interface MayBeHasContact1{
+    contact_1:String
+}
+interface MayBeHasContact2{
+    contact_2:String
+}
+interface MayBeHasImage{
+    image:FileModel
+}
+interface MayBeHasSlug{
+    slug:String
+}
+interface MayBeHasDescription{
+    description:String
+}

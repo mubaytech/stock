@@ -1,0 +1,95 @@
+type Categorie implements HasNom & HasNode & HasSlug & HasDescription & MayBeHasImage & HasCreatedAt & HasUpdatedAt{
+    id:ID!
+    nom:String!
+    slug:String!
+    image:FileModel @belongsTo
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+    description:String!
+    children:[Categorie!]! @hasMany
+    hasChildren:Int! @count(relation: "children")
+    ancestors:[Categorie!]! @belongsTo
+    unitesDeMesures:[UnitesDeMesure!]! @belongsToMany
+    pivot:CategorieUnitesDeMesure!
+}
+input CreateCategorieInput{
+    nom:String!
+    #    slug:String!
+    image:CreateFileModelBelongsTo!
+    description:String
+    parent_id:ID
+    children:CreateCategorieBelongsToMany!
+    uniteDeMesure:CreateUnitesDeMesureBelongsToMany!
+}
+input UpdateCategorieInput{
+    id:ID!
+    nom:String
+    #    slug:String!
+    image:CreateFileModelBelongsTo
+    description:String
+    parent_id:ID
+    children:UpdateCategorieHasMany
+    uniteDeMesure:CreateUnitesDeMesureBelongsToMany
+}
+input UpsertCategorieInput{
+    id:ID
+    nom:String
+    #    slug:String!
+    image:CreateFileModelBelongsTo
+    description:String
+    parent_id:ID
+    children:UpdateCategorieHasMany
+    uniteDeMesure:CreateUnitesDeMesureBelongsToMany
+}
+input CreateCategorieBelongsTo{
+    connect: ID
+    create: CreateCategorieInput
+    update: UpdateCategorieInput
+    upsert: UpsertCategorieInput
+}
+input UpdateCategorieBelongsTo{
+    connect: ID
+    create: CreateCategorieInput
+    update: UpdateCategorieInput
+    upsert: UpsertCategorieInput
+    disconnect: Boolean
+    delete: Boolean
+}
+input CreateCategorieBelongsToMany{
+    create: [CreateCategorieInput!]
+    upsert: [UpsertCategorieInput!]
+    connect: [ID!]
+    sync: [ID!]
+}
+input UpdateCategorieBelongsToMany{
+    create: [CreateCategorieInput!]
+    connect: [ID!]
+    update: [UpdateCategorieInput!]
+    upsert: [UpsertCategorieInput!]
+    sync: [ID!]
+    syncWithoutDetaching: [ID!]
+    delete: [ID!]
+    disconnect: [ID!]
+}
+input UpdateCategorieHasMany {
+    create: [CreateCategorieInput!]
+    update: [UpdateCategorieInput!]
+    upsert: [UpsertCategorieInput!]
+    delete: [ID!]
+}
+extend type Query {
+    categories(
+        root: Boolean @scope(name: "root")
+        where: _ @whereConditions(columns: ["categorie_id"])
+    ):[Categorie!]! @paginate
+    categorie:Categorie! @find
+}
+
+
+extend type Mutation {
+    createCategorie(input:CreateCategorieInput @spread):Categorie! @create
+    updateCategorie(input:UpdateCategorieInput @spread):Categorie! @update
+    upsertCategorie(input:UpsertCategorieInput @spread):Categorie! @upsert
+}
+
+

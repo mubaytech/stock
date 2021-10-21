@@ -1,0 +1,96 @@
+enum Sexe {
+    HOMME @enum(value: 0)
+    FEMME @enum(value: 1)
+}
+
+type Personne implements HasNode & HasCreatedAt & HasUpdatedAt & MayBeHasImage & HasNom & MayBeHasAdresse1 & MayBeHasAdresse2 & MayBeHasContact1 & MayBeHasContact2 & MayBeHasEmail & HasDeletedAt{
+    id:ID!
+    nom:String!
+    sexe:Sexe
+    date_de_naiss:Date
+    cni:String
+    adresse_1:String
+    adresse_2:String
+    contact_1:String
+    contact_2:String
+    email:String
+    image:FileModel @belongsTo
+    imagePieceIdentite:FileModel @belongsTo
+    nationalite:Nationalite @belongsTo
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+    deleted_at:DateTimeTz
+
+}
+input CreatePersonneInput{
+    nom:String!
+    sexe:Sexe
+    date_de_naiss:Date
+    cni:String
+    adresse_1:String
+    adresse_2:String
+    contact_1:String
+    contact_2:String
+    email:String
+    image:CreateFileModelBelongsTo!
+    imagePieceIdentite:CreateFileModelBelongsTo
+    nationalite:CreateNationaliteBelongsTo!
+}
+
+input UpdatePersonneInput{
+    id:ID!
+    nom:String
+    sexe:Sexe
+    date_de_naiss:Date
+    cni:String
+    adresse_1:String
+    adresse_2:String
+    contact_1:String
+    contact_2:String
+    email:String
+    region:String
+    ville:String
+    image:UpdateFileModelBelongsTo
+    imagePieceIdentite:CreateFileModelBelongsTo!
+    nationalite:UpdateNationaliteBelongsTo
+}
+input UpsertPersonneInput{
+    id:ID
+    nom:String
+    sexe:Sexe
+    date_de_naiss:Date
+    cni:String
+    adresse_1:String
+    adresse_2:String
+    contact_1:String
+    contact_2:String
+    email:String
+    region:String
+    ville:String
+    image:UpdateFileModelBelongsTo
+    imagePieceIdentite:CreateFileModelBelongsTo!
+    nationalite:UpdateNationaliteBelongsTo
+}
+input CreatePersonneBelongsTo{
+    connect: ID
+    create: CreatePersonneInput
+    update: UpdatePersonneInput
+    upsert: UpsertPersonneInput
+}
+input UpdatePersonneBelongsTo{
+    connect: ID
+    create: CreatePersonneInput
+    update: UpdatePersonneInput
+    upsert: UpsertPersonneInput
+    disconnect: Boolean
+    delete: Boolean
+}
+extend type Query {
+    personnes:[Personne!]! @paginate
+    personne:Personne @find
+}
+extend type Mutation {
+    createPersonne(input:CreatePersonneInput @spread):Personne! @create
+    updatePersonne(input:UpdatePersonneInput @spread):Personne! @update
+    upsertPersonne(input:UpsertPersonneInput @spread):Personne! @upsert
+}

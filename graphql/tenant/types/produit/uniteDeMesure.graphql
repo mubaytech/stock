@@ -1,0 +1,95 @@
+type UnitesDeMesure implements HasNode & HasNom & HasSlug & HasCreatedAt & HasUpdatedAt{
+    id:ID!
+    nom:String!
+    symbole:String
+    slug:String!
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+    description:String
+    children:[UnitesDeMesure!]! @hasMany
+    hasChildren:Int! @count(relation: "children")
+    ancestors:[UnitesDeMesure!]! @belongsTo
+    categories:[Categorie!]! @belongsToMany
+    pivot:CategorieUnitesDeMesure
+}
+input CreateUnitesDeMesureInput{
+    nom:String!
+    symbole:String!
+    slug:String!
+    description:String
+    parent_id:ID
+    children:UpdateUnitesDeMesureBelongsToMany!
+    categories:CreateCategorieBelongsToMany!
+}
+input UpdateUnitesDeMesureInput{
+    id:ID!
+    nom:String
+    symbole:String
+    slug:String
+    description:String
+    parent_id:ID
+    children:UpdateUnitesDeMesureBelongsToMany
+    categories:CreateCategorieBelongsToMany
+}
+input UpsertUnitesDeMesureInput{
+    id:ID
+    nom:String
+    symbole:String
+    slug:String
+    description:String
+    parent_id:ID
+    children:UpdateUnitesDeMesureBelongsToMany
+    categories:CreateCategorieBelongsToMany
+}
+input CreateUnitesDeMesureBelongsTo{
+    connect: ID
+    create: CreateUnitesDeMesureInput
+    update: UpdateUnitesDeMesureInput
+    upsert: UpsertUnitesDeMesureInput
+}
+input UpdateUnitesDeMesureBelongsTo{
+    connect: ID
+    create: CreateUnitesDeMesureInput
+    update: UpdateUnitesDeMesureInput
+    upsert: UpsertUnitesDeMesureInput
+    disconnect: Boolean
+    delete: Boolean
+}
+input CreateUnitesDeMesureBelongsToMany{
+    create: [CreateUnitesDeMesureInput!]
+    upsert: [UpsertUnitesDeMesureInput!]
+    connect: [ID!]
+    sync: [ID!]
+}
+input UpdateUnitesDeMesureBelongsToMany{
+    create: [CreateUnitesDeMesureInput!]
+    connect: [ID!]
+    update: [UpdateUnitesDeMesureInput!]
+    upsert: [UpsertUnitesDeMesureInput!]
+    sync: [ID!]
+    syncWithoutDetaching: [ID!]
+    delete: [ID!]
+    disconnect: [ID!]
+}
+input UpdateUnitesDeMesureHasMany {
+    create: [CreateUnitesDeMesureInput!]
+    update: [UpdateUnitesDeMesureInput!]
+    upsert: [UpsertUnitesDeMesureInput!]
+    delete: [ID!]
+}
+extend type Query {
+    uniteDeMesures(
+        root: Boolean @scope(name: "root")
+        where: _ @whereConditions(columns: [
+            "id"
+            "unites_de_mesure_id"
+        ])
+    ):[UnitesDeMesure!]! @all
+    uniteDeMesure(id: ID! @eq):UnitesDeMesure @find
+}
+extend type Mutation {
+    createUnitesDeMesure(input:CreateUnitesDeMesureInput @spread):UnitesDeMesure! @create
+    updateUnitesDeMesure(input:UpdateUnitesDeMesureInput @spread):UnitesDeMesure! @update
+    upsertUnitesDeMesure(input:UpsertUnitesDeMesureInput @spread):UnitesDeMesure! @upsert
+}
+

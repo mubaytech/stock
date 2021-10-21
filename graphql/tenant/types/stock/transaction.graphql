@@ -1,0 +1,63 @@
+type Transaction implements HasNode & HasCreatedAt & HasDeletedAt & HasUpdatedAt{
+    id:ID!
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+    deleted_at:DateTimeTz
+    montant:Float!
+    date:DateTimeTz!
+    Depot:Depot!@belongsTo
+    commade:Commande! @belongsTo
+    factures:[Facture!]! @hasMany
+}
+input CreateTransactionInput{
+    montant:Float!
+    date:DateTimeTz!
+    Depot:CreateDepotBelongsTo!
+    commade:CreateCommandeBelongsTo!
+    factures:UpdateFactureHasMany!
+}
+input UpdateTransactionInput{
+    id:ID!
+    montant:Float
+    date:DateTimeTz
+    Depot:CreateDepotBelongsTo
+    commade:CreateCommandeBelongsTo
+    factures:UpdateFactureHasMany
+}
+input UpsertTransactionInput{
+    id:ID
+    montant:Float
+    date:DateTimeTz
+    Depot:CreateDepotBelongsTo
+    commade:CreateCommandeBelongsTo
+    facture:UpdateFactureHasMany
+}
+input CreateTransactionBelongsTo{
+    connect: ID
+    create: CreateTransactionInput
+    update: UpdateTransactionInput
+    upsert: UpsertTransactionInput
+}
+input UpdateTransactionBelongsTo{
+    connect: ID
+    create: CreateTransactionInput
+    update: UpdateTransactionInput
+    upsert: UpsertTransactionInput
+    disconnect: Boolean
+    delete: Boolean
+}
+input UpdateTransactionHasMany {
+    create: [CreateTransactionInput!]
+    update: [UpdateTransactionInput!]
+    upsert: [UpsertTransactionInput!]
+    delete: [ID!]
+}
+extend type Query {
+    Transactions:[Transaction!]! @paginate
+    Transaction:Transaction @find
+}
+extend type Mutation {
+    createTransaction(input:CreateTransactionInput @spread):Transaction! @create
+    updateTransaction(input:UpdateTransactionInput @spread):Transaction! @update
+    upsertTransaction(input:UpsertTransactionInput @spread):Transaction! @upsert
+}

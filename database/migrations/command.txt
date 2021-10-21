@@ -1,0 +1,5 @@
+php artisan make:migration create_*_table --path=database/tenant/migrations/
+php artisan vendor:publish --tag=passport-migrations
+php artisan migrate --database=tenant  --path=database/migrations/tenant
+php artisan passport:installOnly --migration=tenant --provider=users
+php artisan db:seed --class=tenantSeeder

@@ -1,0 +1,5 @@
+type PermissionRole implements HasNode & HasCreatedAt & HasUpdatedAt{
+    id:ID!
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+}

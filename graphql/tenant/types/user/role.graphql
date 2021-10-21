@@ -1,0 +1,84 @@
+enum TypeRole {
+    SUPER_ADMINISTRATEUR @enum(value: "SUPER_ADMINISTRATEUR")
+    ADMINISTRATEUR @enum(value: "ADMINISTRATEUR")
+    GERANT @enum(value: "GERANT")
+    UTILISATEUR @enum(value: "UTILISATEUR")
+}
+
+type Role implements HasNode & HasNom & HasCreatedAt & HasUpdatedAt & HasDescription{
+    id:ID!
+    nom:String!
+    description:String!
+    slug:TypeRole!
+    active:Int!
+    level:Int
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+    permissions:[Permission!]
+}
+
+input CreateRoleInput{
+    nom:String!
+    slug:String!
+    description:String!
+    active:Int!
+    level:Int!
+    permission:CreatePermissionBelongsToMany!
+}
+input UpdateRoleInput{
+    id:ID!
+    nom:String
+    slug:String
+    description:String
+    active:Int
+    level:Int
+    permission:UpdatePermissionBelongsToMany
+}
+input UpsertRoleInput{
+    id:ID
+    nom:String
+    slug:String
+    description:String
+    active:Int
+    level:Int
+    permission:CreatePermissionBelongsToMany
+}
+input CreateRoleBelongsTo{
+    connect: ID
+    create: CreateRoleInput
+    update: UpdateRoleInput
+    upsert: UpsertRoleInput
+}
+input UpdateRoleBelongsTo{
+    connect: ID
+    create: CreateRoleInput
+    update: UpdateRoleInput
+    upsert: UpsertRoleInput
+    disconnect: Boolean
+    delete: Boolean
+}
+input CreateRoleBelongsToMany{
+    create: [CreateRoleInput!]
+    upsert: [UpsertRoleInput!]
+    connect: [ID!]
+    sync: [ID!]
+}
+input UpdateRoleBelongsToMany{
+    create: [CreateRoleInput!]
+    connect: [ID!]
+    update: [UpdateRoleInput!]
+    upsert: [UpsertRoleInput!]
+    sync: [ID!]
+    syncWithoutDetaching: [ID!]
+    delete: [ID!]
+    disconnect: [ID!]
+}
+extend type Query {
+    roles:[Role!]! @paginate
+    role:Role @find
+}
+extend type Mutation {
+    createRole(input:CreateRoleInput @spread):Role! @create
+    updateRole(input:UpdateRoleInput @spread):Role! @update
+    upsertRole(input:UpsertRoleInput @spread):Role! @upsert
+}

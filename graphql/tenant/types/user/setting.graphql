@@ -1,0 +1,105 @@
+type SettingValue{
+    value:Mixed
+    type :String!
+}
+input  SettingValueInput{
+    value:Mixed
+    type :String!
+}
+type SettingPivot{
+    value:SettingValue
+    created_at: DateTimeTz!
+    updated_at: DateTimeTz!
+}
+
+type Setting implements HasNode & HasCreatedAt & HasUpdatedAt {
+    id:ID!
+    nom:String!
+    slug:String!
+    type:String!
+    value:SettingValue!
+    pivot:SettingPivot
+    description:String
+    created_at: DateTimeTz!
+    updated_at: DateTimeTz!
+}
+
+input CreateSettingInput{
+    nom:String!
+    slug:String!
+    type:String!
+    value:SettingValueInput!
+    description:String!
+}
+input UpdateSettingInput{
+    id:ID!
+    nom:String
+    slug:String
+    type:String
+    value:SettingValueInput!
+    description:String
+}
+input UpsertSettingInput{
+    id:ID
+    nom:String
+    slug:String
+    type:String
+    value:SettingValueInput!
+    description:String
+}
+input ConnectSettingInput{
+    id:ID
+    value:SettingValueInput
+}
+input CreateSettingBelongsTo{
+    connect: ID
+    create: CreateSettingInput
+    update: UpdateSettingInput
+    upsert: UpsertSettingInput
+}
+input UpdateSettingBelongsTo{
+    connect: ID
+    create: CreateSettingInput
+    update: UpdateSettingInput
+    upsert: UpsertSettingInput
+    disconnect: Boolean
+    delete: Boolean
+}
+input CreateSettingBelongsToMany{
+    create: [CreateSettingInput!]
+    upsert: [UpsertSettingInput!]
+    connect: [ConnectSettingInput!]
+    sync: [ConnectSettingInput!]
+}
+input ConnectSettingBelongsToMany{
+    connect: [ConnectSettingInput!]
+    sync: [ConnectSettingInput!]
+    syncWithoutDetaching: [ConnectSettingInput!]
+}
+input UpdateSettingBelongsToMany{
+    create: [CreateSettingInput!]
+    connect: [ConnectSettingInput!]
+    update: [UpdateSettingInput!]
+    upsert: [UpsertSettingInput!]
+    sync: [ConnectSettingInput!]
+    syncWithoutDetaching: [ConnectSettingInput!]
+    delete: [ID!]
+    disconnect: [ID!]
+}
+extend type Query  @guard{
+    settings(
+        where:_ @whereConditions(
+            columns: [
+                "id",
+                "type",
+                "nom",
+            ],
+        )
+    ):[Setting!]! @paginate
+    setting(id:ID! @eq):Setting @find
+}
+extend type Mutation  @guard{
+    createSetting(input:CreateSettingInput @spread):Setting! @create
+    updateSetting(input:UpdateSettingInput @spread):Setting! @update
+    upsertSetting(input:UpsertSettingInput @spread):Setting! @upsert
+}

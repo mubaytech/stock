@@ -1,0 +1,124 @@
+enum TypeCommande {
+    VENTE @enum(value: 0)
+    AQUISITION @enum(value: 1)
+}
+enum EtatCommande {
+    RECENT @enum(value: 0)
+    USAGE @enum(value: 1)
+}
+type Commande implements HasNode & HasCreatedAt & HasUpdatedAt & HasDeletedAt & HasDescription{
+    id:ID!
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+    deleted_at:DateTimeTz
+    description:String!
+    type:TypeCommande!
+    etat:EtatCommande!
+    age:DateTimeTz!
+    date_expiration:DateTimeTz!
+    date:DateTimeTz!
+    depot:Depot! @belongsTo
+    user:User! @belongsTo
+    stock:Stock! @belongsToMany
+    client:Client! @belongsTo
+    transactions:[Transaction!]! @hasMany
+    detail:CommandeStock!
+
+}
+input CreateCommandeInput{
+    description:String!
+    type:TypeCommande!
+    etat:EtatCommande!
+    age:DateTimeTz!
+    date_expiration:DateTimeTz!
+    date:DateTimeTz!
+    depot:CreateFileModelBelongsTo!
+    user:CreateUserBelongsTo!
+    stock:CreateStockBelongsToMany!
+    client:CreateClientBelongsTo!
+    transactions:UpdateTransactionHasMany!
+}
+input UpdateCommandeInput{
+    id:ID!
+    description:String
+    type:TypeCommande
+    etat:EtatCommande
+    age:DateTimeTz
+    date_expiration:DateTimeTz
+    date:DateTimeTz
+    depot:CreateFileModelBelongsTo
+    user:CreateUserBelongsTo
+    stock:CreateStockBelongsToMany
+    client:CreateClientBelongsTo
+    transactions:UpdateTransactionHasMany
+}
+input UpsertCommandeInput{
+    id:ID
+    description:String
+    type:TypeCommande
+    etat:EtatCommande
+    age:DateTimeTz
+    date_expiration:DateTimeTz
+    date:DateTimeTz
+    depot:CreateFileModelBelongsTo
+    user:CreateUserBelongsTo
+    stock:CreateStockBelongsToMany
+    client:CreateClientBelongsTo
+    transactions:UpdateTransactionHasMany
+}
+input ConnectCommande{
+    id:ID!
+    quantite:Float!
+    prix_achat_unitaire:Float!
+    prix_de_vente_unitaire:Float!
+    remise:Float!
+    remise_description:String!
+    taxe:Float!
+    taxe_description:String!
+}
+input CreateCommandeBelongsTo{
+    connect: ID
+    create: CreateCommandeInput
+    update: UpdateCommandeInput
+    upsert: UpsertCommandeInput
+}
+input UpdateCommandeBelongsTo{
+    connect: ID
+    create: CreateCommandeInput
+    update: UpdateCommandeInput
+    upsert: UpsertCommandeInput
+    disconnect: Boolean
+    delete: Boolean
+}
+input CreateCommandeBelongsToMany{
+    create: [CreateCommandeInput!]
+    upsert: [UpsertCommandeInput!]
+    connect: [ConnectCommande!]
+    sync: [ConnectCommande!]
+}
+input UpdateCommandeBelongsToMany{
+    create: [CreateCommandeInput!]
+    connect: [ID!]
+    update: [UpdateCommandeInput!]
+    upsert: [UpsertCommandeInput!]
+    sync: [ConnectCommande!]
+    syncWithoutDetaching: [ConnectCommande!]
+    delete: [ID!]
+    disconnect: [ID!]
+}
+input UpdateCommandeHasMany {
+    create: [CreateCommandeInput!]
+    update: [UpdateCommandeInput!]
+    upsert: [UpsertCommandeInput!]
+    delete: [ID!]
+}
+extend type Query {
+    Commandes:[Commande!]! @paginate
+    Commande:Commande @find
+}
+extend type Mutation {
+    createCommande(input:CreateCommandeInput @spread):Commande! @create
+    updateCommande(input:UpdateCommandeInput @spread):Commande! @update
+    upsertCommande(input:UpsertCommandeInput @spread):Commande! @upsert
+}
+

@@ -1,0 +1,101 @@
+type Stock implements HasNode & HasImage & HasNom & HasSlug & HasCreatedAt & HasUpdatedAt{
+    id:ID!
+    nom:String!
+    slug:String!
+    created_at:DateTimeTz!
+    updated_at:DateTimeTz!
+    image:FileModel! @belongsTo
+
+    categorie:CategorieUnitesDeMesure! @belongsTo
+    user:User! @belongsTo
+    commande:[Commande!] @belongsToMany
+    StockDetail:CommandeStock!
+    prix_de_vente_unitaire:Float
+}
+input CreateStockInput{
+    nom:String!
+    slug:String!
+    image:CreateFileModelBelongsTo!
+
+    categorie:CreateCategorieUnitesDeMesureBelongsTo!
+    user:CreateUserBelongsTo!
+    commande:CreateCommandeBelongsToMany!
+    prix_de_vente_unitaire:Float!
+}
+input UpdateStockInput{
+    id:ID!
+    slug:String!
+    image:CreateFileModelBelongsTo!
+
+    categorie:CreateCategorieUnitesDeMesureBelongsTo!
+    user:CreateUserBelongsTo!
+    commande:CreateCommandeBelongsToMany!
+    prix_de_vente_unitaire:Float!
+}
+input UpsertStockInput{
+    id:ID
+    slug:String!
+    image:CreateFileModelBelongsTo!
+
+    categorie:CreateCategorieUnitesDeMesureBelongsTo!
+    user:CreateUserBelongsTo!
+    commande:CreateCommandeBelongsToMany!
+    prix_de_vente_unitaire:Float!
+}
+input ConnectStock{
+    id:ID!
+    quantite:Float!
+    prix_achat_unitaire:Float!
+    prix_de_vente_unitaire:Float!
+    remise:Float!
+    remise_description:String!
+    taxe:Float!
+    taxe_description:String!
+}
+input CreateStockBelongsTo{
+    connect: ID
+    create: CreateStockInput
+    update: UpdateStockInput
+    upsert: UpsertStockInput
+}
+input UpdateStockBelongsTo{
+    connect: ID
+    create: CreateStockInput
+    update: UpdateStockInput
+    upsert: UpsertStockInput
+    disconnect: Boolean
+    delete: Boolean
+}
+input CreateStockBelongsToMany{
+    create: [CreateStockInput!]
+    upsert: [UpsertStockInput!]
+    connect: [ConnectStock!]
+    sync: [ConnectStock!]
+}
+input UpdateStockBelongsToMany{
+    create: [CreateStockInput!]
+    connect: [ID!]
+    update: [UpdateStockInput!]
+    upsert: [UpsertStockInput!]
+    sync: [ConnectStock!]
+    syncWithoutDetaching: [ConnectStock!]
+    delete: [ID!]
+    disconnect: [ID!]
+}
+input UpdateStockHasMany {
+    create: [CreateStockInput!]
+    update: [UpdateStockInput!]
+    upsert: [UpsertStockInput!]
+    delete: [ID!]
+}
+extend type Query {
+    Stocks:[Stock!]! @paginate
+    Stock:Stock @find
+}
+extend type Mutation {
+    createStock(input:CreateStockInput @spread):Stock! @create
+    updateStock(input:UpdateStockInput @spread):Stock! @update
+    upsertStock(input:UpsertStockInput @spread):Stock! @upsert
+}
+
+
